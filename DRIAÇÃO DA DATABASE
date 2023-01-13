@@ -1,0 +1,408 @@
+CREATE DATABASE IF NOT EXISTS db_techfacil
+CHARSET utf8mb4
+COLLATE utf8mb4_general_ci;
+
+USE db_techfacil;
+
+CREATE TABLE tb_placaMae(
+	id_placaMae INT AUTO_INCREMENT,
+    nome_placaMae VARCHAR(30) NOT NULL,
+    valor_placaMae FLOAT NOT NULL,
+    especificacao_placaMae LONGTEXT,
+PRIMARY KEY (id_placaMae)
+);
+
+CREATE TABLE tb_processador(
+	id_processador INT AUTO_INCREMENT,
+    nome_processador VARCHAR(30) NOT NULL,
+    valor_processador FLOAT NOT NULL,
+    especificacao_processador LONGTEXT,
+PRIMARY KEY (id_processador)
+);
+
+CREATE TABLE tb_cooler(
+	id_cooler INT AUTO_INCREMENT,
+    nome_cooler VARCHAR(30) NOT NULL,
+    valor_cooler FLOAT NOT NULL,
+    especificacao_cooler LONGTEXT,
+PRIMARY KEY (id_cooler)
+);
+
+CREATE TABLE tb_memoria(
+	id_memoria INT AUTO_INCREMENT,
+    nome_memoria VARCHAR(30) NOT NULL,
+    valor_memoria FLOAT NOT NULL,
+    especificacao_memoria LONGTEXT,
+PRIMARY KEY (id_memoria)
+);
+
+CREATE TABLE tb_armazenamento(
+	id_armazenamento INT AUTO_INCREMENT,
+    nome_armazenamento VARCHAR(30) NOT NULL,
+    valor_armazenamento FLOAT NOT NULL,
+    especificacao_armazenamento LONGTEXT,
+PRIMARY KEY (id_armazenamento)
+);
+
+CREATE TABLE tb_fonteAlimentacao(
+	id_fonteAlimentacao INT AUTO_INCREMENT,
+    nome_fonteAlimentacao VARCHAR(30) NOT NULL,
+    valor_fonteAlimentacao FLOAT NOT NULL,
+    especificacao_fonteAlimentacao LONGTEXT,
+PRIMARY KEY (id_fonteAlimentacao)
+);
+
+CREATE TABLE tb_teclado(
+	id_teclado INT AUTO_INCREMENT,
+    nome_teclado VARCHAR(30) NOT NULL,
+    valor_teclado FLOAT NOT NULL,
+    especificacao_teclado LONGTEXT,
+PRIMARY KEY (id_teclado)
+);
+
+CREATE TABLE tb_mouse(
+	id_mouse INT AUTO_INCREMENT,
+    nome_mouse VARCHAR(30) NOT NULL,
+    valor_mouse FLOAT NOT NULL,
+    especificacao_mouse LONGTEXT NOT NULL,
+PRIMARY KEY (id_mouse)
+);
+
+CREATE TABLE tb_monitor(
+	id_monitor INT AUTO_INCREMENT,
+    nome_monitor VARCHAR(30) NOT NULL,
+    valor_monitor FLOAT NOT NULL,
+    especificacao_monitor LONGTEXT,
+PRIMARY KEY (id_monitor)
+);
+
+CREATE TABLE tb_maquina (
+id_maquina INT AUTO_INCREMENT,
+    nome_maquina VARCHAR (30) NOT NULL,
+    id_placaMae INT NOT NULL,
+    id_processador INT NOT NULL,
+    id_armazenamento INT NOT NULL,
+    id_memoria INT NOT NULL,
+    id_cooler INT NOT NULL,
+    id_fonteAlimentacao INT NOT NULL,
+    id_monitor INT,
+    id_teclado INT,
+    id_mouse INT,
+PRIMARY KEY (id_maquina),
+CONSTRAINT FK_id_placaMae FOREIGN KEY (id_placaMae) REFERENCES TB_placaMae (id_placaMae),
+CONSTRAINT FK_id_processador FOREIGN KEY (id_processador) REFERENCES tb_processador (id_processador),
+CONSTRAINT FK_id_armazenamento FOREIGN KEY (id_armazenamento) REFERENCES tb_armazenamento (id_armazenamento),
+CONSTRAINT FK_id_memoria FOREIGN KEY (id_memoria) REFERENCES tb_memoria (id_memoria),
+CONSTRAINT FK_id_cooler FOREIGN KEY (id_cooler) REFERENCES tb_cooler (id_cooler),
+CONSTRAINT FK_id_fonteAlimentacao FOREIGN KEY (id_fonteAlimentacao) REFERENCES tb_fonteAlimentacao (id_fonteAlimentacao),
+CONSTRAINT FK_id_monitor FOREIGN KEY (id_monitor) REFERENCES tb_monitor (id_monitor),
+CONSTRAINT FK_id_teclado FOREIGN KEY (id_teclado) REFERENCES tb_teclado (id_teclado),
+CONSTRAINT FK_id_mouse FOREIGN KEY (id_mouse) REFERENCES tb_mouse (id_mouse)
+);
+/*-------------------------------FUNÇÃO DE REMOVE ACENTO---------------------------------*/
+DELIMITER $$
+CREATE FUNCTION fn_removeAcento(Texto VARCHAR(50))
+RETURNS VARCHAR (50)
+BEGIN
+	SET Texto = REPLACE(Texto,'á','a'),
+        Texto = REPLACE(Texto,'ã','a'),
+		Texto = REPLACE(Texto,'à','a'),
+        Texto = REPLACE(Texto,'é','e'),
+        Texto = REPLACE(Texto,'í','i'),
+        Texto = REPLACE(Texto,'ó','o'),
+        Texto = REPLACE(Texto,'ú','u'),
+        Texto = REPLACE(Texto,'Á','A'),
+        Texto = REPLACE(Texto,'Ã','A'),
+        Texto = REPLACE(Texto,'À','A'),
+        Texto = REPLACE(Texto,'É','E'),
+        Texto = REPLACE(Texto,'Í','I'),
+        Texto = REPLACE(Texto,'Ó','O'),
+        Texto = REPLACE(Texto,'Ú','U'),
+        Texto = REPLACE(Texto,'Ç','C'),
+        Texto = REPLACE(Texto,'ç','c'),
+        Texto = UPPER(Texto);
+	RETURN Texto;
+END;
+$$
+DELIMITER ;
+
+/*-------------------------------INSERT DE ARMAZENAMENTO---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertArmazenamento(in_nome_armazenamento VARCHAR(30),in_valor_armazenamento FLOAT, in_especificacao_armazenamento LONGTEXT)
+BEGIN
+	INSERT INTO tb_armazenamento(nome_armazenamento, valor_armazenamento, especificacao_armazenamento)
+    VALUES (fn_removeAcento(in_nome_armazenamento), in_valor_armazenamento, fn_removeAcento(in_especificacao_armazenamento));
+END $$
+DELIMITER ;
+
+/*-------------------------------INSERT DE COOLER---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertCooler(in_nome_cooler VARCHAR(30),in_valor_cooler FLOAT, in_especificacao_cooler LONGTEXT)
+BEGIN
+	INSERT INTO tb_cooler(nome_cooler, valor_cooler, especificacao_cooler)
+    VALUES (fn_removeAcento(in_nome_cooler), in_valor_cooler, fn_removeAcento(in_especificacao_cooler));
+END $$
+DELIMITER ;
+
+/*-------------------------------INSERT DE FONTE DE ALIMENTAÇÃO---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertFAlimentacao(in_nome_falimentacao VARCHAR(30),in_valor_falimentacao FLOAT, in_especificacao_falimentacao LONGTEXT)
+BEGIN
+	INSERT INTO tb_fontealimentacao(nome_fonteAlimentacao, valor_fonteAlimentacao, especificacao_fonteAlimentacao)
+    VALUES (fn_removeAcento(in_nome_falimentacao), in_valor_falimentacao, fn_removeAcento(in_especificacao_falimentacao));
+END $$
+DELIMITER ;
+
+/*-------------------------------INSERT DE MEMORIA---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertMemoria(in_nome_memoria VARCHAR(30),in_valor_memoria FLOAT, in_especificacao_memoria LONGTEXT)
+BEGIN
+	INSERT INTO tb_memoria(nome_memoria, valor_memoria, especificacao_memoria)
+    VALUES (fn_removeAcento(in_nome_memoria), in_valor_memoria, fn_removeAcento(in_especificacao_memoria));
+END $$
+DELIMITER ;
+
+/*-------------------------------INSERT DE MONITOR---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertMonitor(in_nome_monitor VARCHAR(30),in_valor_monitor FLOAT, in_especificacao_monitor LONGTEXT)
+BEGIN
+	INSERT INTO tb_monitor(nome_monitor, valor_monitor, especificacao_monitor)
+    VALUES (fn_removeAcento(in_nome_monitor), in_valor_monitor, fn_removeAcento(in_especificacao_monitor));
+END $$
+DELIMITER ;
+
+CALL sp_insertMonitor ('DELL VR',400,'full hd');
+
+/*-------------------------------INSERT DE MOUSE---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertMouse(in_nome_mouse VARCHAR(30),in_valor_mouse FLOAT, in_especificacao_mouse LONGTEXT)
+BEGIN
+	INSERT INTO tb_mouse(nome_mouse, valor_mouse, especificacao_mouse)
+    VALUES (fn_removeAcento(in_nome_mouse), in_valor_mouse, fn_removeAcento(in_especificacao_mouse));
+END $$
+DELIMITER ;
+
+CALL sp_insertMouse ('DELL G2',110,'OPTICO');
+/*-------------------------------INSERT DE PLACA MAE---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertPlacamae(in_nome_placaMae VARCHAR(30),in_valor_placaMae FLOAT, in_especificacao_placaMae LONGTEXT)
+BEGIN
+	INSERT INTO tb_placamae(nome_placaMae, valor_placaMae, especificacao_placaMae)
+    VALUES (fn_removeAcento(in_nome_placaMae), in_valor_placaMae, fn_removeAcento(in_especificacao_placaMae));
+END $$
+DELIMITER ;
+
+CALL sp_insertPlacamae('ASUS XR3',270,'DDR4 12 ENTRADAS');
+
+/*-------------------------------INSERT DE PROCESSADOR---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertProcessador(in_nome_processador VARCHAR(30),in_valor_processador FLOAT, in_especificacao_processador LONGTEXT)
+BEGIN
+	INSERT INTO tb_processador(nome_processador, valor_processador, especificacao_processador)
+    VALUES (fn_removeAcento(in_nome_processador), in_valor_processador, fn_removeAcento(in_especificacao_processador));
+END $$
+DELIMITER ;
+
+/*-------------------------------INSERT DE TECLADO---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertTeclado(in_nome_teclado VARCHAR(30),in_valor_teclado FLOAT, in_especificacao_teclado LONGTEXT)
+BEGIN
+	INSERT INTO tb_teclado(nome_teclado, valor_teclado, especificacao_teclado)
+    VALUES (fn_removeAcento(in_nome_teclado), in_valor_teclado, fn_removeAcento(in_especificacao_teclado));
+END $$
+DELIMITER ;
+
+CALL sp_insertTeclado('BLUE STAR',170,'Mecanico');
+
+/*-------------------------------INSERT DE MAQUINA---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insertMaquina(in_nome_maquina VARCHAR(30),in_id_placaMae INT, in_id_processador INT, in_id_armazenamento INT, in_id_memoria INT, in_id_cooler INT, in_id_fonteAlimentacao INT)
+BEGIN
+	INSERT INTO tb_maquina(nome_maquina, id_placaMae, id_processador, id_armazenamento, id_memoria, id_cooler, id_fonteAlimentacao)
+    VALUES (fn_removeAcento(in_nome_maquina), in_id_placaMae, in_id_processador, in_id_armazenamento, in_id_memoria, in_id_cooler, in_id_fonteAlimentacao);
+END $$
+DELIMITER ;
+
+CALL sp_insertMaquina('NOVA TR',3,3,3,3,3,3);
+
+INSERT INTO tb_maquina (nome_maquina, id_placaMae, id_processador, id_armazenamento, id_memoria, id_cooler, id_fonteAlimentacao)
+VALUES ('NOVA TR',3,3,3,3,3,3);
+
+DELETE FROM tb_maquina WHERE id_maquina = 2;
+
+SELECT * FROM tb_maquina;
+
+DROP VIEW vw_maquina;
+
+CREATE VIEW vw_maquina AS
+SELECT m.id_maquina ID,
+	   m.nome_maquina NOME,
+	   p.nome_placaMae PLACAMAE,
+       i.nome_processador PROCESSADOR,
+       a.nome_armazenamento ARMAZENAMENTO,
+       a.especificacao_armazenamento ESPACO,
+       u.nome_memoria MEMORIA,
+       u.especificacao_memoria GB,
+       f.nome_fonteAlimentacao FONTE,
+       c.nome_cooler COOLER,
+       m.valor_maquina VALOR
+FROM tb_maquina m
+JOIN tb_armazenamento a
+	ON m.id_armazenamento = a.id_armazenamento
+JOIN tb_cooler c
+	ON m.id_cooler = c.id_cooler
+JOIN tb_fontealimentacao f
+	ON m.id_fonteAlimentacao = f.id_fonteAlimentacao
+JOIN tb_memoria u
+	ON m.id_memoria = u.id_memoria
+JOIN tb_placamae p
+	ON m.id_placaMae = p.id_placaMae
+JOIN tb_processador i
+	ON m.id_processador = i.id_processador;
+
+/*----------------------------------------VIEWS DE CONTROLE DE ESTOQUE-----------------------------------*/
+
+CREATE VIEW vw_estoquePlacamae AS
+SELECT COUNT(id_placaMae) QTD_PLACAMAE
+FROM tb_placamae;
+
+CREATE VIEW vw_estoqueProcessador AS
+SELECT COUNT(id_processador) QTD_PROCESSADOR
+FROM tb_processador;
+
+CREATE VIEW vw_estoqueArmazenamento AS
+SELECT COUNT(id_armazenamento) QTD_ARMAZENAMENTO
+FROM tb_armazenamento;
+
+CREATE VIEW vw_estoqueMemoria AS
+SELECT COUNT(id_memoria) QTD_MEMORIA
+FROM tb_memoria;
+
+CREATE VIEW vw_estoqueCooler AS
+SELECT COUNT(id_cooler) QTD_COOLER
+FROM tb_cooler;
+
+CREATE VIEW vw_estoqueFAlimentacao AS
+SELECT COUNT(id_fonteAlimentacao) QTD_FALIMENTACAO
+FROM tb_fontealimentacao;
+
+CREATE VIEW vw_estoqueMonitor AS
+SELECT COUNT(id_monitor) QTD_MONITOR
+FROM tb_monitor;
+
+CREATE VIEW vw_estoqueMouse AS
+SELECT COUNT(id_mouse) QTD_MOUSE
+FROM tb_mouse;
+
+CREATE VIEW vw_estoqueTeclado AS
+SELECT COUNT(id_teclado) QTD_TECLADO
+FROM tb_teclado;
+--------------------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE tb_maquina
+ADD valor_maquina FLOAT;
+--------------------------------------------------------------------------------------------------------------------------------
+
+CREATE VIEW vw_valores AS
+SELECT  a.valor_armazenamento,
+		p.valor_placaMae, 
+        i.valor_processador,
+		u.valor_memoria,
+        f.valor_fonteAlimentacao,
+        c.valor_cooler
+FROM tb_maquina m
+JOIN tb_armazenamento a
+	ON m.id_armazenamento = a.id_armazenamento
+JOIN tb_cooler c
+	ON m.id_cooler = c.id_cooler
+JOIN tb_fontealimentacao f
+	ON m.id_fonteAlimentacao = f.id_fonteAlimentacao
+JOIN tb_memoria u
+	ON m.id_memoria = u.id_memoria
+JOIN tb_placamae p
+	ON m.id_placaMae = p.id_placaMae
+JOIN tb_processador i
+	ON m.id_processador = i.id_processador;
+
+SELECT valor_armazenamento + 
+	   valor_placaMae + 
+	   valor_processador + 
+	   valor_memoria + 
+	   valor_fonteAlimentacao + 
+	   valor_cooler from vw_valores;
+
+DELIMITER $$
+CREATE TRIGGER trg_soma_valor AFTER INSERT
+ON tb_maquina
+FOR EACH ROW
+	BEGIN
+        DECLARE vlr FLOAT;
+
+        SET vlr = (SELECT valor_armazenamento + 
+						  valor_placaMae + 
+						  valor_processador + 
+						  valor_memoria + 
+						  valor_fonteAlimentacao + 
+						  valor_cooler from vw_valores);
+		UPDATE tb_maquina SET NEW.valor_maquina = vlr;    
+    END $$
+DELIMITER ;
+
+    
+/*------------------------------ TABELAS DE PEDIDOS -----------------------------------*/
+
+CREATE TABLE tb_pedido(
+	id_pedido INT AUTO_INCREMENT,
+    valor_pedido FLOAT NOT NULL,
+    id_maquina INT,
+    id_cliente INT,
+PRIMARY KEY (id_pedido),
+CONSTRAINT FK_id_maquina FOREIGN KEY (id_maquina) REFERENCES tb_maquina (id_maquina),
+CONSTRAINT FK_id_cliente FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
+);
+DROP TABLE tb_pedido;
+INSERT INTO tb_pedido(valor_pedido, id_cliente)
+VALUES (2900,2);
+
+SELECT * FROM tb_pedido;
+
+UPDATE tb_pedido SET id_maquina = 13 WHERE id_pedido = 6; 
+
+/*------------------------------ TABELAS CAIXA DE CLIENTE -----------------------------------*/
+
+
+CREATE TABLE tb_cliente(
+	id_cliente INT AUTO_INCREMENT,
+    nome_cliente VARCHAR (30) NOT NULL,
+PRIMARY KEY (id_cliente)
+);
+
+INSERT INTO tb_cliente(nome_cliente)
+VALUES ('REINALDO JOSE');
+
+CREATE VIEW vw_venda AS
+SELECT c.nome_cliente CLIENTE,
+	   p.valor_pedido VALOR,
+       m.nome_maquina MAQUINA
+FROM tb_pedido p
+JOIN tb_cliente c
+	ON p.id_cliente = c.id_cliente
+JOIN tb_maquina m
+	ON p.id_maquina = m.id_maquina;
+	   
+CREATE TABLE tb_caixa(
+	id_caixa INT AUTO_INCREMENT,
+    id_pedido INT,
+    valor FLOAT NOT NULL,
+PRIMARY KEY (id_caixa),
+CONSTRAINT FK_id_pedido FOREIGN KEY (id_pedido) REFERENCES tb_pedido (id_pedido)
+);
+
+INSERT INTO tb_caixa (id_pedido, valor)
+VALUES (4,3200),(4,3000),(6,2900);
+
+CREATE VIEW vw_processador AS
+SELECT * FROM tb_processador;
+CREATE VIEW vw_caixa AS
+select * from tb_caixa;
+
