@@ -12,6 +12,7 @@ Abaixo você encontrá uma breve apresentação do banco.
 
 ## --- ESTRUTURA DO BANCO DE DADOS ---
 
+![image](https://user-images.githubusercontent.com/86980974/212923907-df079b29-ec03-4f13-b3b8-0512eb89ff5c.png)
 
 ## --- FUNCION PARA REMOVER ACENTO ---
 
