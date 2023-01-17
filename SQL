@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS db_techfacil
 CHARSET utf8mb4
 COLLATE utf8mb4_general_ci;
 
-USE db_techfacil;
+use db_techfacil;
 
 CREATE TABLE tb_placaMae(
 	id_placaMae INT AUTO_INCREMENT,
@@ -171,7 +171,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-CALL sp_insertMonitor ('DELL VR',400,'full hd');
 
 /*-------------------------------INSERT DE MOUSE---------------------------------*/
 DELIMITER $$
@@ -182,7 +181,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-CALL sp_insertMouse ('DELL G2',110,'OPTICO');
 /*-------------------------------INSERT DE PLACA MAE---------------------------------*/
 DELIMITER $$
 CREATE PROCEDURE sp_insertPlacamae(in_nome_placaMae VARCHAR(30),in_valor_placaMae FLOAT, in_especificacao_placaMae LONGTEXT)
@@ -192,7 +190,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-CALL sp_insertPlacamae('ASUS XR3',270,'DDR4 12 ENTRADAS');
 
 /*-------------------------------INSERT DE PROCESSADOR---------------------------------*/
 DELIMITER $$
@@ -212,7 +209,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-CALL sp_insertTeclado('BLUE STAR',170,'Mecanico');
 
 /*-------------------------------INSERT DE MAQUINA---------------------------------*/
 DELIMITER $$
@@ -223,16 +219,8 @@ BEGIN
 END $$
 DELIMITER ;
 
-CALL sp_insertMaquina('NOVA TR',3,3,3,3,3,3);
-
-INSERT INTO tb_maquina (nome_maquina, id_placaMae, id_processador, id_armazenamento, id_memoria, id_cooler, id_fonteAlimentacao)
-VALUES ('NOVA TR',3,3,3,3,3,3);
-
-DELETE FROM tb_maquina WHERE id_maquina = 2;
-
-SELECT * FROM tb_maquina;
-
-DROP VIEW vw_maquina;
+ALTER TABLE tb_maquina
+ADD valor_maquina FLOAT;
 
 CREATE VIEW vw_maquina AS
 SELECT m.id_maquina ID,
@@ -299,8 +287,7 @@ SELECT COUNT(id_teclado) QTD_TECLADO
 FROM tb_teclado;
 --------------------------------------------------------------------------------------------------------------------------------
 
-ALTER TABLE tb_maquina
-ADD valor_maquina FLOAT;
+
 --------------------------------------------------------------------------------------------------------------------------------
 
 CREATE VIEW vw_valores AS
@@ -331,23 +318,17 @@ SELECT valor_armazenamento +
 	   valor_fonteAlimentacao + 
 	   valor_cooler from vw_valores;
 
-DELIMITER $$
-CREATE TRIGGER trg_soma_valor AFTER INSERT
-ON tb_maquina
-FOR EACH ROW
-	BEGIN
-        DECLARE vlr FLOAT;
 
-        SET vlr = (SELECT valor_armazenamento + 
-						  valor_placaMae + 
-						  valor_processador + 
-						  valor_memoria + 
-						  valor_fonteAlimentacao + 
-						  valor_cooler from vw_valores);
-		UPDATE tb_maquina SET NEW.valor_maquina = vlr;    
-    END $$
-DELIMITER ;
+/*------------------------------ TABELAS CAIXA DE CLIENTE -----------------------------------*/
 
+
+CREATE TABLE tb_cliente(
+	id_cliente INT AUTO_INCREMENT,
+    nome_cliente VARCHAR (30) NOT NULL,
+PRIMARY KEY (id_cliente)
+);
+    
+    
     
 /*------------------------------ TABELAS DE PEDIDOS -----------------------------------*/
 
@@ -360,25 +341,7 @@ PRIMARY KEY (id_pedido),
 CONSTRAINT FK_id_maquina FOREIGN KEY (id_maquina) REFERENCES tb_maquina (id_maquina),
 CONSTRAINT FK_id_cliente FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
 );
-DROP TABLE tb_pedido;
-INSERT INTO tb_pedido(valor_pedido, id_cliente)
-VALUES (2900,2);
 
-SELECT * FROM tb_pedido;
-
-UPDATE tb_pedido SET id_maquina = 13 WHERE id_pedido = 6; 
-
-/*------------------------------ TABELAS CAIXA DE CLIENTE -----------------------------------*/
-
-
-CREATE TABLE tb_cliente(
-	id_cliente INT AUTO_INCREMENT,
-    nome_cliente VARCHAR (30) NOT NULL,
-PRIMARY KEY (id_cliente)
-);
-
-INSERT INTO tb_cliente(nome_cliente)
-VALUES ('REINALDO JOSE');
 
 CREATE VIEW vw_venda AS
 SELECT c.nome_cliente CLIENTE,
@@ -391,18 +354,63 @@ JOIN tb_maquina m
 	ON p.id_maquina = m.id_maquina;
 	   
 CREATE TABLE tb_caixa(
-	id_caixa INT AUTO_INCREMENT,
-    id_pedido INT,
+    id_caixa INT AUTO_INCREMENT,
     valor FLOAT NOT NULL,
 PRIMARY KEY (id_caixa),
-CONSTRAINT FK_id_pedido FOREIGN KEY (id_pedido) REFERENCES tb_pedido (id_pedido)
 );
 
-INSERT INTO tb_caixa (id_pedido, valor)
-VALUES (4,3200),(4,3000),(6,2900);
+INSERT INTO tb_caixa VALUES (1,0);
 
 CREATE VIEW vw_processador AS
 SELECT * FROM tb_processador;
+
 CREATE VIEW vw_caixa AS
 select * from tb_caixa;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_caixa AFTER INSERT
+ON tb_pedido
+FOR EACH ROW
+	BEGIN
+	DECLARE soma FLOAT;
+        SET soma = (SELECT SUM(valor_pedido) FROM tb_venda);
+        
+        UPDATE tb_caixa SET valor = soma WHERE id_caixa = 1;
+    END $$
+
+DELIMITER ;
+
+INSERT INTO `tb_armazenamento` VALUES (1,'SSD KINGSTON',90,'240 GB'),
+(2,'SSD SAMSUNG QVO 870',120,'240 GB'),(3,'SSD SAMSUNG QVO 970',250,'512 GB'),
+(4,'SSD KINGSTON KC600',250,'512 GB'),(5,'SSD KINGSTON KC600',350,'1 TB'),(6,'HDD SEAGATE',150,'2 TB');
+
+INSERT INTO `tb_cooler` VALUES (1,'COOLER PROCESSADOR X99',90,'120 MM'),(2,'FREEZE MODE',360,'150W'),
+(3,'RYSE MODE',220,'150W'),(4,'SUPER COOLER',420,'350W');
+
+INSERT INTO `tb_fontealimentacao` VALUES (1,'FONTE ATX MACH',125,'500 W BIVOLT'),
+(2,'ATX RH200',250,'500W'),(3,'ATX RH210',260,'500W'),(4,'ATX RH110',160,'200W'),(5,'ATX RH310',460,'1000W');
+
+INSERT INTO `tb_memoria` VALUES (1,'MEMORIA ALTMER',100,'8 GB 2100 MHZ'),
+(2,'MEMORIA ALTMER',100,'8 GB 2100 MHZ'),(3,'X2 MEMORIA ALTMER',200,'16 GB 2100 MHZ'),
+(4,'X2 MEMORIA ALTMER',200,'16 GB DDR4 2100 MHZ'),(5,'KINGSTON HYPERX',130.99,'8GB'),
+(6,'X2 KINGSTON HYPERX',260.99,'16 GB'),(7,'ASGARD LOKI',100,'6 GB'),(8,'X2 ASGARD LOKI',200,'16 GB'),
+(9,'JUHOR',109,'8 GB'),(10,'X2 JUHOR',220,'16 GB');
+
+INSERT INTO `tb_monitor` VALUES (1,'SANSUBG TBE',500,'FULL HD'),(2,'SANSUNG XRE',600,'FULL HD'),(3,'DELL VR',400,'FULL HD');
+
+INSERT INTO `tb_mouse` VALUES (1,'RAZER XOPTICS',130,'OPTICO'),(2,'DELL G1',100,'OPTICO'),(3,'DELL G2',110,'OPTICO');
+
+INSERT INTO `tb_placamae` VALUES (1,'PLACA MAE ALTMIER',180,'PLACA MAE DDR4'),(2,'ACER BC 500',300,'DDR4 4 ENTRADAS'),(3,'ASUS XR3',270,'DDR4 12 ENTRADAS');
+
+INSERT INTO `tb_processador` VALUES (1,'XEON E5 2640 V3',200,'PROCESSADOR 12 NUCLEOS 16 THREADS'),
+(2,'AMD RYZEN 5 5500',600,'6 NUCLEOS 12 THREADS'),(3,'AMD RYZEN 7 5600',600,'8 NUCLEOS 16 THREADS'),(4,'INTEL CORE I5 12500H',1600,'12 NUCLEOS 24 THREADS');
+
+INSERT INTO `tb_teclado` VALUES (1,'MULTILASER',50,'TECLADO'),(2,'XDRAGON RAZER',150,'MECANICO'),(3,'BLUE STAR',170,'MECANICO');
+
+INSERT INTO `tb_maquina` VALUES (7,'RTX 2023',1,1,1,1,1,1,1,1,1,2500);
+
+INSERT INTO `tb_cliente` VALUES (1,'Ricardo Pereira'),(2,'FERNANDO OLIVEIRA'),(3,'REINALDO JOSE');
+
+INSERT INTO `tb_pedido` VALUES (4,3200,7,1),(5,3000,12,2),(6,2900,13,2);
 
