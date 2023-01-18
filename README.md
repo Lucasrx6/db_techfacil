@@ -20,10 +20,3 @@ Abaixo você encontrá uma breve apresentação do banco.
 
 ![image](https://user-images.githubusercontent.com/86980974/212925275-5596b0ad-4735-47cb-b488-f980ec4f172e.png)
 
-
-## --- FUNCION PARA REMOVER ACENTO ---
-
-## --- PROCEDURE PARA INSERT NAS TABELAS ---
-
-
-## --- VIEWS DAS TABELAS ---
