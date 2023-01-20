@@ -1,6 +1,6 @@
 ## db_techfacil
 
-Abaixo você encontrá uma breve apresentação do banco.
+Abaixo você encontrá uma breve apresentação do banco que desenvolvi baseando em uma ideia empreededora.
 
 ## --- MODELO CONCEITUAL ---
 
