@@ -128,29 +128,68 @@ DELIMITER ;
 
 /*-------------------------------INSERT DE ARMAZENAMENTO---------------------------------*/
 DELIMITER $$
-CREATE PROCEDURE sp_insertArmazenamento(in_nome_armazenamento VARCHAR(30),in_valor_armazenamento FLOAT, in_especificacao_armazenamento LONGTEXT)
+CREATE PROCEDURE sp_insert_armazenamento (
+    IN nome_armazenamento VARCHAR(30),
+    IN valor_armazenamento FLOAT,
+    IN especificacao_armazenamento LONGTEXT
+)
 BEGIN
-	INSERT INTO tb_armazenamento(nome_armazenamento, valor_armazenamento, especificacao_armazenamento)
-    VALUES (fn_removeAcento(in_nome_armazenamento), in_valor_armazenamento, fn_removeAcento(in_especificacao_armazenamento));
+    IF nome_armazenamento IS NULL OR nome_armazenamento = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome do armazenamento não pode estar vazio.';
+    END IF;
+
+    IF valor_armazenamento IS NULL OR valor_armazenamento < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor do armazenamento deve ser maior ou igual a zero.';
+    END IF;
+
+    INSERT INTO tb_armazenamento (nome_armazenamento, valor_armazenamento, especificacao_armazenamento) 
+    VALUES (nome_armazenamento, valor_armazenamento, especificacao_armazenamento);
 END $$
+
 DELIMITER ;
 
 /*-------------------------------INSERT DE COOLER---------------------------------*/
 DELIMITER $$
-CREATE PROCEDURE sp_insertCooler(in_nome_cooler VARCHAR(30),in_valor_cooler FLOAT, in_especificacao_cooler LONGTEXT)
+CREATE PROCEDURE sp_insert_cooler (
+    IN nome_cooler VARCHAR(30),
+    IN valor_cooler FLOAT,
+    IN especificacao_cooler LONGTEXT
+)
 BEGIN
-	INSERT INTO tb_cooler(nome_cooler, valor_cooler, especificacao_cooler)
-    VALUES (fn_removeAcento(in_nome_cooler), in_valor_cooler, fn_removeAcento(in_especificacao_cooler));
+    IF nome_cooler IS NULL OR nome_cooler = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome do cooler não pode estar vazio.';
+    END IF;
+
+    IF valor_cooler IS NULL OR valor_cooler < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor do cooler deve ser maior ou igual a zero.';
+    END IF;
+
+    INSERT INTO tb_cooler (nome_cooler, valor_cooler, especificacao_cooler) 
+    VALUES (nome_cooler, valor_cooler, especificacao_cooler);
 END $$
+
 DELIMITER ;
 
 /*-------------------------------INSERT DE FONTE DE ALIMENTAÇÃO---------------------------------*/
 DELIMITER $$
-CREATE PROCEDURE sp_insertFAlimentacao(in_nome_falimentacao VARCHAR(30),in_valor_falimentacao FLOAT, in_especificacao_falimentacao LONGTEXT)
+CREATE PROCEDURE sp_insert_fonteAlimentacao (
+    IN nome_fonteAlimentacao VARCHAR(30),
+    IN valor_fonteAlimentacao FLOAT,
+    IN especificacao_fonteAlimentacao LONGTEXT
+)
 BEGIN
-	INSERT INTO tb_fontealimentacao(nome_fonteAlimentacao, valor_fonteAlimentacao, especificacao_fonteAlimentacao)
-    VALUES (fn_removeAcento(in_nome_falimentacao), in_valor_falimentacao, fn_removeAcento(in_especificacao_falimentacao));
+    IF nome_fonteAlimentacao IS NULL OR nome_fonteAlimentacao = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome da fonte de alimentação não pode estar vazio.';
+    END IF;
+
+    IF valor_fonteAlimentacao IS NULL OR valor_fonteAlimentacao < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor da fonte de alimentação deve ser maior ou igual a zero.';
+    END IF;
+
+    INSERT INTO tb_fonteAlimentacao (nome_fonteAlimentacao, valor_fonteAlimentacao, especificacao_fonteAlimentacao) 
+    VALUES (nome_fonteAlimentacao, valor_fonteAlimentacao, especificacao_fonteAlimentacao);
 END $$
+
 DELIMITER ;
 
 /*-------------------------------INSERT DE MEMORIA---------------------------------*/
@@ -164,40 +203,113 @@ DELIMITER ;
 
 /*-------------------------------INSERT DE MONITOR---------------------------------*/
 DELIMITER $$
-CREATE PROCEDURE sp_insertMonitor(in_nome_monitor VARCHAR(30),in_valor_monitor FLOAT, in_especificacao_monitor LONGTEXT)
+CREATE PROCEDURE sp_insert_monitor (
+    IN nome_monitor VARCHAR(30),
+    IN valor_monitor FLOAT,
+    IN especificacao_monitor LONGTEXT
+)
 BEGIN
-	INSERT INTO tb_monitor(nome_monitor, valor_monitor, especificacao_monitor)
-    VALUES (fn_removeAcento(in_nome_monitor), in_valor_monitor, fn_removeAcento(in_especificacao_monitor));
+    IF nome_monitor IS NULL OR nome_monitor = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome do monitor não pode estar vazio.';
+    END IF;
+
+    IF valor_monitor IS NULL OR valor_monitor < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor do monitor deve ser maior ou igual a zero.';
+    END IF;
+
+    INSERT INTO tb_monitor (nome_monitor, valor_monitor, especificacao_monitor) 
+    VALUES (nome_monitor, valor_monitor, especificacao_monitor);
 END $$
 DELIMITER ;
 
 
+/*-------------------------------INSERT DE TECLADO ---------------------------------*/
+DELIMITER $$
+CREATE PROCEDURE sp_insert_teclado (
+    IN nome_teclado VARCHAR(30),
+    IN valor_teclado FLOAT,
+    IN especificacao_teclado LONGTEXT
+)
+BEGIN
+    IF nome_teclado IS NULL OR nome_teclado = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome do teclado não pode estar vazio.';
+    END IF;
+
+    IF valor_teclado IS NULL OR valor_teclado < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor do teclado deve ser maior ou igual a zero.';
+    END IF;
+
+    INSERT INTO tb_teclado (nome_teclado, valor_teclado, especificacao_teclado) 
+    VALUES (nome_teclado, valor_teclado, especificacao_teclado);
+END $$
+
+DELIMITER ;
+
 /*-------------------------------INSERT DE MOUSE---------------------------------*/
 DELIMITER $$
-CREATE PROCEDURE sp_insertMouse(in_nome_mouse VARCHAR(30),in_valor_mouse FLOAT, in_especificacao_mouse LONGTEXT)
+CREATE PROCEDURE sp_insert_mouse (
+    IN nome_mouse VARCHAR(30),
+    IN valor_mouse FLOAT,
+    IN especificacao_mouse LONGTEXT
+)
 BEGIN
-	INSERT INTO tb_mouse(nome_mouse, valor_mouse, especificacao_mouse)
-    VALUES (fn_removeAcento(in_nome_mouse), in_valor_mouse, fn_removeAcento(in_especificacao_mouse));
+    IF nome_mouse IS NULL OR nome_mouse = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome do mouse não pode estar vazio.';
+    END IF;
+
+    IF valor_mouse IS NULL OR valor_mouse < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor do mouse deve ser maior ou igual a zero.';
+    END IF;
+
+    INSERT INTO tb_mouse (nome_mouse, valor_mouse, especificacao_mouse) 
+    VALUES (nome_mouse, valor_mouse, especificacao_mouse);
 END $$
+
 DELIMITER ;
 
 /*-------------------------------INSERT DE PLACA MAE---------------------------------*/
 DELIMITER $$
-CREATE PROCEDURE sp_insertPlacamae(in_nome_placaMae VARCHAR(30),in_valor_placaMae FLOAT, in_especificacao_placaMae LONGTEXT)
+CREATE PROCEDURE sp_insert_placaMae (
+    IN nome_placaMae VARCHAR(30),
+    IN valor_placaMae FLOAT,
+    IN especificacao_placaMae LONGTEXT
+)
 BEGIN
-	INSERT INTO tb_placamae(nome_placaMae, valor_placaMae, especificacao_placaMae)
-    VALUES (fn_removeAcento(in_nome_placaMae), in_valor_placaMae, fn_removeAcento(in_especificacao_placaMae));
+    IF nome_placaMae IS NULL OR nome_placaMae = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome da placa mãe não pode estar vazio.';
+    END IF;
+
+    IF valor_placaMae IS NULL OR valor_placaMae < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor da placa mãe deve ser maior ou igual a zero.';
+    END IF;
+
+    INSERT INTO tb_placaMae (nome_placaMae, valor_placaMae, especificacao_placaMae) 
+    VALUES (nome_placaMae, valor_placaMae, especificacao_placaMae);
 END $$
+
 DELIMITER ;
 
 
 /*-------------------------------INSERT DE PROCESSADOR---------------------------------*/
 DELIMITER $$
-CREATE PROCEDURE sp_insertProcessador(in_nome_processador VARCHAR(30),in_valor_processador FLOAT, in_especificacao_processador LONGTEXT)
+CREATE PROCEDURE sp_insert_processador (
+    IN nome_processador VARCHAR(30),
+    IN valor_processador FLOAT,
+    IN especificacao_processador LONGTEXT
+)
 BEGIN
-	INSERT INTO tb_processador(nome_processador, valor_processador, especificacao_processador)
-    VALUES (fn_removeAcento(in_nome_processador), in_valor_processador, fn_removeAcento(in_especificacao_processador));
+    IF nome_processador IS NULL OR nome_processador = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome do processador não pode estar vazio.';
+    END IF;
+
+    IF valor_processador IS NULL OR valor_processador < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Valor do processador deve ser maior ou igual a zero.';
+    END IF;
+
+    INSERT INTO tb_processador (nome_processador, valor_processador, especificacao_processador) 
+    VALUES (nome_processador, valor_processador, especificacao_processador);
 END $$
+
 DELIMITER ;
 
 /*-------------------------------INSERT DE TECLADO---------------------------------*/
@@ -212,10 +324,49 @@ DELIMITER ;
 
 /*-------------------------------INSERT DE MAQUINA---------------------------------*/
 DELIMITER $$
-CREATE PROCEDURE sp_insertMaquina(in_nome_maquina VARCHAR(30),in_id_placaMae INT, in_id_processador INT, in_id_armazenamento INT, in_id_memoria INT, in_id_cooler INT, in_id_fonteAlimentacao INT)
+CREATE PROCEDURE sp_insert_maquina (
+    IN nome_maquina VARCHAR(30),
+    IN id_placaMae INT,
+    IN id_processador INT,
+    IN id_armazenamento INT,
+    IN id_memoria INT,
+    IN id_cooler INT,
+    IN id_fonteAlimentacao INT,
+    IN id_monitor INT,
+    IN id_teclado INT,
+    IN id_mouse INT
+)
 BEGIN
-	INSERT INTO tb_maquina(nome_maquina, id_placaMae, id_processador, id_armazenamento, id_memoria, id_cooler, id_fonteAlimentacao)
-    VALUES (fn_removeAcento(in_nome_maquina), in_id_placaMae, in_id_processador, in_id_armazenamento, in_id_memoria, in_id_cooler, in_id_fonteAlimentacao);
+    IF nome_maquina IS NULL OR nome_maquina = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nome da máquina não pode estar vazio.';
+    END IF;
+
+    IF id_placaMae IS NULL OR id_placaMae <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID da placa mãe deve ser maior que zero.';
+    END IF;
+
+    IF id_processador IS NULL OR id_processador <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID do processador deve ser maior que zero.';
+    END IF;
+
+    IF id_armazenamento IS NULL OR id_armazenamento <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID do armazenamento deve ser maior que zero.';
+    END IF;
+
+    IF id_memoria IS NULL OR id_memoria <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID da memória deve ser maior que zero.';
+    END IF;
+
+    IF id_cooler IS NULL OR id_cooler <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID do cooler deve ser maior que zero.';
+    END IF;
+
+    IF id_fonteAlimentacao IS NULL OR id_fonteAlimentacao <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID da fonte de alimentação deve ser maior que zero.';
+   END IF;
+   INSERT INTO tb_maquina (nome_maquina, id_placaMae, id_processador, id_armazenamento, id_memoria, id_cooler, id_fonteAlimentacao, id_monitor, id_teclado, id_mouse)
+VALUES (nome_maquina, id_placaMae, id_processador, id_armazenamento, id_memoria, id_cooler, id_fonteAlimentacao, id_monitor, id_teclado, id_mouse);
+
 END $$
 DELIMITER ;
 
